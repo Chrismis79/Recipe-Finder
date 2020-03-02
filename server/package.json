@@ -1,13 +1,14 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node.js backend for recipe finder app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server":"nodemon  index.js",
+    "start": "node  index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Christine Fletcher",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
