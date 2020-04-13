@@ -6,24 +6,27 @@ const Users = require("../users/users-model");
 
 //REGISTER
 
-router.post("/register", (req, res) => {
+router.post("/register", validateUser, (req, res) => {
   let user = req.body;
-  const hash = bcrypt.hashSync(user.password, 10);
-  user.password = hash;
-
-  Users.add(user)
-    .then(addedUser => {
-      const token = signToken(addedUser)
-      res.status(201).json({
-        user: addedUser,
-        token,
-        message: "User registered successfully"
-      });
+  
+  const hash = bcrypt.hashSync(user.password, 10)
+  user.password = hash;    
+     
+       Users.add(user)
+        .then(addedUser => {
+          const token = signToken(addedUser)
+          res.status(201).json({
+            user: addedUser,
+            token,
+            message: "User registered successfully"
+          });
+        })
+        .catch(err => {
+          res.status(500).json({errorMessage: err.message});
+        });  
+       
     })
-    .catch(err => {
-      res.status(500).json(err);
-    });
-});
+  
 
 //LOGIN 
 
@@ -63,6 +66,21 @@ function signToken(user) {
     expiresIn: "24hr"
   };
   return jwt.sign(payload, secret, options);
+}
+
+function validateUser(req, res, next){
+  
+  Users.findByUserName(req.body.username)
+      .then(user => {
+        if(user){
+          res.status(403).json({message: "Username already exists, please choose a new one."})
+        
+        }else{
+          next();
+        }
+
+      })
+    
 }
 
 module.exports = router;

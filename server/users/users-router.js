@@ -21,7 +21,7 @@ router.get("/:username", restricted, (req, res) => {
         
       res.status(200).json(user);
     })
-    .catch(err => res.status(500).json(err, "Error getting user by username"));
+    .catch(err => res.status(500).json(`${err}getting user by username` ));
 });
 
 
@@ -38,15 +38,18 @@ router.put('/:id', restricted, (req, res) => {
               if(editUser){
                   res.status(200).json({...item, id: req.params.id})
               }else {
-                  res.status(404).json({message: "The user with the specified ID does not exist."})
+                  res.status(404).json({errorMessage: "The user with the specified ID does not exist."})
               }
           })
           .catch(error => {
               console.log("Error on PUT api/users/:id", error)
-              res.status(500).json({error: "The user information could not be modified."})
+              res.status(500).json({errorMessage: `${error}The user information could not be modified.`})
           });
   };
 });  
+
+
+
 
 //DELETE  /api/users/:id  Delete user by id
 router.delete('/:id', restricted, (req, res) => {
